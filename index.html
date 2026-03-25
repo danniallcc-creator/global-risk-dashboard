@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球风险预警实时分析系统</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1>🌍 全球风险预警实时分析系统</h1>
+            <p class="subtitle">Global Risk Early Warning & Real-time Analysis System</p>
+            <div class="header-info">
+                <span id="current-time"></span>
+                <span class="status-indicator">● 系统运行中</span>
+            </div>
+        </header>
+
+        <!-- 主导航 -->
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="intelligence">📡 情报输入</button>
+            <button class="nav-btn" data-tab="decision">💼 决策输出</button>
+            <button class="nav-btn" data-tab="warning">⚠️ AI 预警看板</button>
+            <button class="nav-btn" data-tab="settings">⚙️ 系统设置</button>
+        </nav>
+
+        <!-- 情报输入模块 -->
+        <section id="intelligence" class="tab-content active">
+            <div class="module-header">
+                <h2>📡 情报输入监控</h2>
+                <p>实时采集全球商业信号，AI 自动去噪打分</p>
+            </div>
+
+            <!-- 世界地图 -->
+            <div class="map-container">
+                <div class="map-controls">
+                    <button class="control-btn active" data-layer="shipping">🚢 航运线路</button>
+                    <button class="control-btn" data-layer="air">✈️ 空运线路</button>
+                    <button class="control-btn" data-layer="risk">⚠️ 风险热点</button>
+                </div>
+                <div id="world-map"></div>
+            </div>
+
+            <!-- 情报分类卡片 -->
+            <div class="intelligence-grid">
+                <!-- 航运与通道信号 -->
+                <div class="intel-card shipping">
+                    <div class="card-header">
+                        <h3>🚢 航运与通道信号</h3>
+                        <span class="update-time">更新：2 分钟前</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="metric-row">
+                            <span class="metric-label">平均运价指数</span>
+                            <span class="metric-value up">1,847 <small>↑3.2%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">战争险附加费</span>
+                            <span class="metric-value warning">$450/TEU <small>↑15%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">港口拥堵率</span>
+                            <span class="metric-value">23.5%</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">准班率</span>
+                            <span class="metric-value down">67.8% <small>↓2.1%</small></span>
+                        </div>
+                        <div class="alert-list">
+                            <div class="alert-item high">
+                                <span class="alert-icon">🔴</span>
+                                <span>红海航线改道，苏伊士运河通行量下降 40%</span>
+                            </div>
+                            <div class="alert-item medium">
+                                <span class="alert-icon">🟡</span>
+                                <span>洛杉矶港拥堵指数上升至 7.2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 能源与原料信号 -->
+                <div class="intel-card energy">
+                    <div class="card-header">
+                        <h3>⛽ 能源与原料信号</h3>
+                        <span class="update-time">更新：5 分钟前</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="metric-row">
+                            <span class="metric-label">布伦特原油</span>
+                            <span class="metric-value up">$82.45 <small>↑2.8%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">航油价格</span>
+                            <span class="metric-value up">$2,890/吨 <small>↑1.5%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">化工原料指数</span>
+                            <span class="metric-value">1,234 <small>持平</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">关键材料 (铜)</span>
+                            <span class="metric-value down">$8,450/吨 <small>↓0.8%</small></span>
+                        </div>
+                        <canvas id="energy-chart" height="120"></canvas>
+                    </div>
+                </div>
+
+                <!-- 支付与信用信号 -->
+                <div class="intel-card payment">
+                    <div class="card-header">
+                        <h3>💳 支付与信用信号</h3>
+                        <span class="update-time">更新：10 分钟前</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="metric-row">
+                            <span class="metric-label">美元汇率指数</span>
+                            <span class="metric-value up">103.2 <small>↑0.5%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">新兴市场外汇储备</span>
+                            <span class="metric-value down">-2.3% <small>紧张</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">银行合规收紧度</span>
+                            <span class="metric-value warning">中等偏高</span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">客户付款延迟率</span>
+                            <span class="metric-value up">18.7% <small>↑3.2%</small></span>
+                        </div>
+                        <div class="country-list">
+                            <div class="country-item warning">
+                                <span class="country-flag">🇹🇷</span>
+                                <span class="country-name">土耳其</span>
+                                <span class="country-status">外汇紧张</span>
+                            </div>
+                            <div class="country-item warning">
+                                <span class="country-flag">🇦🇷</span>
+                                <span class="country-name">阿根廷</span>
+                                <span class="country-status">汇率波动</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 政策与舆情信号 -->
+                <div class="intel-card policy">
+                    <div class="card-header">
+                        <h3>📋 政策与舆情信号</h3>
+                        <span class="update-time">更新：15 分钟前</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="alert-list">
+                            <div class="alert-item high">
+                                <span class="alert-icon">🔴</span>
+                                <span>欧盟新的碳关税政策生效，影响范围扩大</span>
+                            </div>
+                            <div class="alert-item high">
+                                <span class="alert-icon">🔴</span>
+                                <span>美国更新出口管制清单，新增 15 家企业</span>
+                            </div>
+                            <div class="alert-item medium">
+                                <span class="alert-icon">🟡</span>
+                                <span>东南亚某国大选临近，政策不确定性上升</span>
+                            </div>
+                            <div class="alert-item low">
+                                <span class="alert-icon">🟢</span>
+                                <span>RCEP 成员国简化海关流程，通关效率提升</span>
+                            </div>
+                        </div>
+                        <div class="trend-chart">
+                            <canvas id="policy-trend-chart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 竞品与渠道信号 -->
+                <div class="intel-card competitor">
+                    <div class="card-header">
+                        <h3>🏆 竞品与渠道信号</h3>
+                        <span class="update-time">更新：20 分钟前</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="metric-row">
+                            <span class="metric-label">竞品涨价比例</span>
+                            <span class="metric-value up">34% <small>↑8%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">缺货品类数</span>
+                            <span class="metric-value warning">127 <small>↑23</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">交付延迟率</span>
+                            <span class="metric-value up">21.5% <small>↑4.3%</small></span>
+                        </div>
+                        <div class="metric-row">
+                            <span class="metric-label">渠道库存周转</span>
+                            <span class="metric-value down">45 天 <small>↑7 天</small></span>
+                        </div>
+                        <div class="competitor-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>品类</th>
+                                        <th>竞品动态</th>
+                                        <th>影响等级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>建材</td>
+                                        <td>主要供应商提价 12%</td>
+                                        <td><span class="badge high">高</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>包装</td>
+                                        <td>原材料短缺，交期延长</td>
+                                        <td><span class="badge medium">中</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 决策输出模块 -->
+        <section id="decision" class="tab-content">
+            <div class="module-header">
+                <h2>💼 决策输出支持</h2>
+                <p>AI 辅助四大经营动作，数据驱动科学决策</p>
+            </div>
+
+            <div class="decision-grid">
+                <!-- 动态报价 -->
+                <div class="decision-card">
+                    <div class="card-header">
+                        <h3>💰 动态报价系统</h3>
+                        <button class="action-btn">生成报价</button>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label>目标市场</label>
+                            <select id="quote-market">
+                                <option value="us">美国</option>
+                                <option value="eu">欧洲</option>
+                                <option value="sea">东南亚</option>
+                                <option value="me">中东</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>产品品类</label>
+                            <input type="text" placeholder="输入产品名称">
+                        </div>
+                        <div class="floating-factors">
+                            <h4>浮动因子</h4>
+                            <div class="factor-row">
+                                <span>运费波动</span>
+                                <span class="factor-value up">+3.2%</span>
+                            </div>
+                            <div class="factor-row">
+                                <span>保险费用</span>
+                                <span class="factor-value up">+1.5%</span>
+                            </div>
+                            <div class="factor-row">
+                                <span>战争险附加</span>
+                                <span class="factor-value up">+15%</span>
+                            </div>
+                            <div class="factor-row">
+                                <span>汇率影响</span>
+                                <span class="factor-value down">-0.8%</span>
+                            </div>
+                        </div>
+                        <div class="quote-result">
+                            <div class="result-row">
+                                <span>安全报价区间</span>
+                                <span class="highlight">$12.5 - $13.8 /件</span>
+                            </div>
+                            <div class="result-row">
+                                <span>有效期</span>
+                                <span class="highlight">7 天</span>
+                            </div>
+                            <div class="result-row">
+                                <span>建议毛利率</span>
+                                <span class="highlight">≥18%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 客户分层授信 -->
+                <div class="decision-card">
+                    <div class="card-header">
+                        <h3>👥 客户分层授信</h3>
+                        <button class="action-btn">评估客户</button>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label>客户名称/ID</label>
+                            <input type="text" placeholder="输入客户信息">
+                        </div>
+                        <div class="customer-assessment">
+                            <div class="assessment-row">
+                                <span>风险等级</span>
+                                <span class="risk-badge medium">B 级 - 中等风险</span>
+                            </div>
+                            <div class="assessment-row">
+                                <span>付款历史评分</span>
+                                <span>78/100</span>
+                            </div>
+                            <div class="assessment-row">
+                                <span>宏观变量影响</span>
+                                <span class="warning">国家外汇紧张</span>
+                            </div>
+                            <div class="assessment-row">
+                                <span>行业波动系数</span>
+                                <span>1.23</span>
+                            </div>
+                        </div>
+                        <div class="credit-suggestion">
+                            <h4>AI 建议</h4>
+                            <div class="suggestion-item">
+                                <strong>建议账期:</strong> 30 天
+                            </div>
+                            <div class="suggestion-item">
+                                <strong>预付款比例:</strong> ≥40%
+                            </div>
+                            <div class="suggestion-item">
+                                <strong>信用额度:</strong> $50,000
+                            </div>
+                            <div class="suggestion-item">
+                                <strong>复核周期:</strong> 每月
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 交付策略选择 -->
+                <div class="decision-card">
+                    <div class="card-header">
+                        <h3>📦 交付策略选择</h3>
+                        <button class="action-btn">计算最优方案</button>
+                    </div>
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label>目的地</label>
+                            <select>
+                                <option>德国汉堡</option>
+                                <option>美国洛杉矶</option>
+                                <option>阿联酋迪拜</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>货物类型</label>
+                            <input type="text" placeholder="如：建材、电子产品">
+                        </div>
+                        <div class="delivery-options">
+                            <div class="option-card selected">
+                                <div class="option-header">
+                                    <h4>直发</h4>
+                                    <span class="score">85 分</span>
+                                </div>
+                                <div class="option-details">
+                                    <div class="detail-row">
+                                        <span>总成本</span>
+                                        <span>$12,450</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>交付确定性</span>
+                                        <span class="good">高 (92%)</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>风险敞口</span>
+                                        <span class="warning">中等</span>
+                                    </div>
+                                </div>
+                                <div class="recommendation">✅ 推荐方案</div>
+                            </div>
+                            <div class="option-card">
+                                <div class="option-header">
+                                    <h4>区域仓</h4>
+                                    <span class="score">78 分</span>
+                                </div>
+                                <div class="option-details">
+                                    <div class="detail-row">
+                                        <span>总成本</span>
+                                        <span>$11,200</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>交付确定性</span>
+                                        <span>中 (85%)</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>风险敞口</span>
+                                        <span class="good">低</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="option-card">
+                                <div class="option-header">
+                                    <h4>本土交付</h4>
+                                    <span class="score">72 分</span>
+                                </div>
+                                <div class="option-details">
+                                    <div class="detail-row">
+                                        <span>总成本</span>
+                                        <span>$13,800</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>交付确定性</span>
+                                        <span class="good">高 (95%)</span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span>风险敞口</span>
+                                        <span class="good">低</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 库存与备货 -->
+                <div class="decision-card">
+                    <div class="card-header">
+                        <h3>📊 库存与备货</h3>
+                        <button class="action-btn">情景推演</button>
+                    </div>
+                    <div class="card-content">
+                        <div class="scenario-selector">
+                            <button class="scenario-btn active">乐观情景</button>
+                            <button class="scenario-btn">基准情景</button>
+                            <button class="scenario-btn">悲观情景</button>
+                        </div>
+                        <div class="inventory-analysis">
+                            <div class="metric-row">
+                                <span>当前库存水平</span>
+                                <span>45,000 件</span>
+                            </div>
+                            <div class="metric-row">
+                                <span>安全库存阈值</span>
+                                <span class="warning">32,000 件</span>
+                            </div>
+                            <div class="metric-row">
+                                <span>预计消耗速度</span>
+                                <span>8,500 件/月</span>
+                            </div>
+                            <div class="metric-row">
+                                <span>补货提前期</span>
+                                <span>35 天</span>
+                            </div>
+                        </div>
+                        <div class="ai-recommendation">
+                            <h4>🤖 AI 决策建议</h4>
+                            <div class="recommendation-list">
+                                <div class="rec-item">
+                                    <span class="rec-icon">✅</span>
+                                    <span>建议立即补货 20,000 件，分两批发运</span>
+                                </div>
+                                <div class="rec-item">
+                                    <span class="rec-icon">⚠️</span>
+                                    <span>首批 12,000 件走空运 (15 天到货)</span>
+                                </div>
+                                <div class="rec-item">
+                                    <span class="rec-icon">📦</span>
+                                    <span>次批 8,000 件走海运 (35 天到货)</span>
+                                </div>
+                                <div class="rec-item">
+                                    <span class="rec-icon">🔄</span>
+                                    <span>准备替代料方案 B，应对供应中断</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI 预警看板 -->
+        <section id="warning" class="tab-content">
+            <div class="module-header">
+                <h2>⚠️ AI 预警看板</h2>
+                <p>三级预警系统，把盲目行动变成数据触发的纪律性行动</p>
+            </div>
+
+            <div class="warning-overview">
+                <div class="warning-stat high">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">红色预警</div>
+                    <div class="stat-desc">需要立即动作</div>
+                </div>
+                <div class="warning-stat medium">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">黄色预警</div>
+                    <div class="stat-desc">48 小时内复核</div>
+                </div>
+                <div class="warning-stat low">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">绿色优化</div>
+                    <div class="stat-desc">常态监控优化</div>
+                </div>
+            </div>
+
+            <!-- 红色预警 -->
+            <div class="warning-section">
+                <div class="section-header high">
+                    <h3>🔴 红色预警 - 立即动作</h3>
+                    <span class="count-badge">3 条</span>
+                </div>
+                <div class="warning-list">
+                    <div class="warning-item critical">
+                        <div class="warning-icon">🔴</div>
+                        <div class="warning-content">
+                            <div class="warning-title">战争险附加费突增 15%</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">航运</span>
+                                <span>影响航线：中东 - 欧洲</span>
+                                <span>增幅：$300→$450/TEU</span>
+                                <span>时间：2 小时前</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看应对方案</button>
+                                <button class="action-btn-small secondary">通知相关人员</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item critical">
+                        <div class="warning-icon">🔴</div>
+                        <div class="warning-content">
+                            <div class="warning-title">关键港口拥堵跳变</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">物流</span>
+                                <span>港口：洛杉矶港</span>
+                                <span>拥堵指数：5.8→7.2</span>
+                                <span>时间：4 小时前</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看应对方案</button>
+                                <button class="action-btn-small secondary">调整发货计划</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item critical">
+                        <div class="warning-icon">🔴</div>
+                        <div class="warning-content">
+                            <div class="warning-title">政策黑名单更新</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">合规</span>
+                                <span>来源：美国商务部</span>
+                                <span>新增实体：15 家企业</span>
+                                <span>时间：6 小时前</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看名单详情</button>
+                                <button class="action-btn-small secondary">筛查现有客户</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 黄色预警 -->
+            <div class="warning-section">
+                <div class="section-header medium">
+                    <h3>🟡 黄色预警 - 48 小时内复核</h3>
+                    <span class="count-badge">7 条</span>
+                </div>
+                <div class="warning-list">
+                    <div class="warning-item warning">
+                        <div class="warning-icon">🟡</div>
+                        <div class="warning-content">
+                            <div class="warning-title">运价持续上行</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">航运</span>
+                                <span>连续 5 天上涨，累计 +8.5%</span>
+                                <span>趋势：仍在上升</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item warning">
+                        <div class="warning-icon">🟡</div>
+                        <div class="warning-content">
+                            <div class="warning-title">油价突破阈值</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">能源</span>
+                                <span>布伦特原油：$82.45</span>
+                                <span>突破警戒线：$80</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item warning">
+                        <div class="warning-icon">🟡</div>
+                        <div class="warning-content">
+                            <div class="warning-title">当地汇率急跌</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">金融</span>
+                                <span>货币：土耳其里拉</span>
+                                <span>跌幅：-5.2% (本周)</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item warning">
+                        <div class="warning-icon">🟡</div>
+                        <div class="warning-content">
+                            <div class="warning-title">同品类竞品缺货</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">市场</span>
+                                <span>品类：建材</span>
+                                <span>缺货商家数：23 家</span>
+                            </div>
+                            <div class="warning-action">
+                                <button class="action-btn-small">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 绿色优化 -->
+            <div class="warning-section">
+                <div class="section-header low">
+                    <h3>🟢 绿色优化 - 常态监控</h3>
+                    <span class="count-badge">12 条</span>
+                </div>
+                <div class="warning-list">
+                    <div class="warning-item info">
+                        <div class="warning-icon">🟢</div>
+                        <div class="warning-content">
+                            <div class="warning-title">毛利变化监控</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">财务</span>
+                                <span>平均毛利率：18.5% → 17.8%</span>
+                                <span>建议：优化成本结构</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item info">
+                        <div class="warning-icon">🟢</div>
+                        <div class="warning-content">
+                            <div class="warning-title">转化率趋势</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">运营</span>
+                                <span>北美市场：3.2% → 3.5%</span>
+                                <span>趋势：向好</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item info">
+                        <div class="warning-icon">🟢</div>
+                        <div class="warning-content">
+                            <div class="warning-title">退货率异常</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">质量</span>
+                                <span>欧洲区：2.1% → 2.8%</span>
+                                <span>需关注产品质量</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="warning-item info">
+                        <div class="warning-icon">🟢</div>
+                        <div class="warning-content">
+                            <div class="warning-title">渠道库存周转</div>
+                            <div class="warning-detail">
+                                <span class="detail-tag">供应链</span>
+                                <span>周转天数：38 天 → 45 天</span>
+                                <span>建议：加快促销</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 系统设置 -->
+        <section id="settings" class="tab-content">
+            <div class="module-header">
+                <h2>⚙️ 系统设置</h2>
+                <p>配置数据采集源、预警阈值、通知方式</p>
+            </div>
+
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>📡 数据源配置</h3>
+                    <div class="setting-item">
+                        <label>航运数据源</label>
+                        <select>
+                            <option>FreightWaves</option>
+                            <option>Drewry</option>
+                            <option>Alphaliner</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>能源价格源</label>
+                        <select>
+                            <option>Bloomberg</option>
+                            <option>Reuters</option>
+                            <option>Platts</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>汇率数据源</label>
+                        <select>
+                            <option>XE.com</option>
+                            <option>OANDA</option>
+                            <option>Fixer.io</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>政策信息源</label>
+                        <select multiple>
+                            <option selected>政府官网</option>
+                            <option selected>行业协会</option>
+                            <option>新闻媒体</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3>🎯 预警阈值设置</h3>
+                    <div class="setting-item">
+                        <label>运价涨幅警戒线</label>
+                        <input type="range" min="0" max="50" value="10" id="freight-threshold">
+                        <span class="range-value">10%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>汇率波动阈值</label>
+                        <input type="range" min="0" max="20" value="5" id="exchange-threshold">
+                        <span class="range-value">5%</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>港口拥堵指数</label>
+                        <input type="range" min="0" max="10" value="7" id="port-threshold">
+                        <span class="range-value">7.0</span>
+                    </div>
+                    <div class="setting-item">
+                        <label>付款延迟率</label>
+                        <input type="range" min="0" max="50" value="20" id="payment-threshold">
+                        <span class="range-value">20%</span>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3>🔔 通知方式</h3>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="email-notify" checked>
+                        <label for="email-notify">邮件通知</label>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="sms-notify">
+                        <label for="sms-notify">短信通知</label>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="dingtalk-notify" checked>
+                        <label for="dingtalk-notify">钉钉通知</label>
+                    </div>
+                    <div class="setting-item checkbox">
+                        <input type="checkbox" id="wechat-notify">
+                        <label for="wechat-notify">企业微信</label>
+                    </div>
+                    <div class="setting-item">
+                        <label>通知接收人</label>
+                        <input type="text" placeholder="输入邮箱或手机号">
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <h3>🤖 AI 模型配置</h3>
+                    <div class="setting-item">
+                        <label>风险评分模型</label>
+                        <select>
+                            <option>标准版 v2.3</option>
+                            <option>增强版 v3.0</option>
+                            <option>定制版</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>数据采集频率</label>
+                        <select>
+                            <option>实时 (每 5 分钟)</option>
+                            <option>高频 (每 15 分钟)</option>
+                            <option>标准 (每 30 分钟)</option>
+                            <option>低频 (每小时)</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>自动报告生成</label>
+                        <select>
+                            <option>每日 8:00</option>
+                            <option>每日 9:00</option>
+                            <option>每周一 9:00</option>
+                            <option>手动生成</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="save-settings">
+                <button class="save-btn">💾 保存配置</button>
+                <button class="reset-btn">🔄 恢复默认</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
