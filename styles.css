@@ -252,6 +252,76 @@ body {
     margin-left: 6px;
 }
 
+/* 紧凑模式 */
+.intel-card.compact {
+    padding: 12px 15px;
+    max-height: 200px;
+}
+
+.intel-card.compact .card-header {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+}
+
+.intel-card.compact .card-header h3 {
+    font-size: 1rem;
+}
+
+.intel-card.compact .card-content.compact {
+    gap: 6px;
+}
+
+.intel-card .badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.intel-card .badge.up {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+}
+
+.intel-card .badge.down {
+    background: rgba(52, 211, 153, 0.2);
+    color: #34d399;
+}
+
+.energy-kline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.energy-kline-header .kline-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+.energy-kline-header .kline-label strong {
+    color: #f1f5f9;
+    font-size: 1rem;
+}
+
+.energy-kline-header .kline-change {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.energy-kline-header .kline-change.up {
+    background: rgba(248, 113, 113, 0.2);
+    color: #f87171;
+}
+
+.energy-kline-header .kline-change.down {
+    background: rgba(52, 211, 153, 0.2);
+    color: #34d399;
+}
+
 /* 警报列表 */
 .alert-list {
     margin-top: 10px;

@@ -343,14 +343,14 @@ function initEnergyChart() {
     if (!ctx) return;
 
     try {
-        // 模拟K线数据: [开盘, 收盘, 最高, 最低] 转换后的柱状图展示
+        // 模拟K线数据: [开盘, 收盘, 最高, 最低]
         const candleData = [
-            { open: 78.5, close: 80.2, high: 81.0, low: 78.2 },
-            { open: 80.2, close: 79.8, high: 80.8, low: 79.5 },
-            { open: 79.8, close: 82.1, high: 82.5, low: 79.5 },
-            { open: 82.1, close: 81.5, high: 82.8, low: 81.2 },
-            { open: 81.5, close: 83.2, high: 83.8, low: 81.3 },
-            { open: 83.2, close: 82.45, high: 83.5, low: 82.0 }
+            { open: 85.2, close: 86.1, high: 86.5, low: 84.8 },
+            { open: 86.1, close: 85.8, high: 86.4, low: 85.5 },
+            { open: 85.8, close: 87.2, high: 87.6, low: 85.5 },
+            { open: 87.2, close: 86.9, high: 87.8, low: 86.5 },
+            { open: 86.9, close: 88.1, high: 88.5, low: 86.7 },
+            { open: 88.1, close: 87.4, high: 88.3, low: 86.9 }
         ];
 
         const labels = ['3/20', '3/21', '3/22', '3/23', '3/24', '3/25'];
@@ -358,7 +358,7 @@ function initEnergyChart() {
         // 计算涨跌柱状图数据
         const priceChanges = candleData.map(d => d.close - d.open);
         const colors = priceChanges.map(change =>
-            change >= 0 ? 'rgba(255, 170, 0, 0.8)' : 'rgba(0, 214, 143, 0.8)'
+            change >= 0 ? '#f87171' : '#34d399'
         );
 
         energyChart = new Chart(ctx, {
@@ -370,21 +370,10 @@ function initEnergyChart() {
                         label: '涨跌',
                         data: priceChanges,
                         backgroundColor: colors,
-                        borderColor: colors.map(c => c.replace('0.8', '1')),
-                        borderWidth: 1,
-                        barPercentage: 0.6
-                    },
-                    {
-                        label: '收盘价',
-                        data: candleData.map(d => d.close),
-                        type: 'line',
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                        borderWidth: 2,
-                        pointRadius: 3,
-                        pointBackgroundColor: 'rgb(255, 99, 132)',
-                        tension: 0.3,
-                        yAxisID: 'y1'
+                        borderColor: colors,
+                        borderWidth: 0,
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.8
                     }
                 ]
             },
@@ -392,26 +381,30 @@ function initEnergyChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                            boxWidth: 12,
-                            font: { size: 10 }
-                        }
-                    },
+                    legend: { display: false },
                     tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        titleColor: '#e2e8f0',
+                        bodyColor: '#e2e8f0',
+                        borderColor: 'rgba(96, 165, 250, 0.3)',
+                        borderWidth: 1,
+                        padding: 8,
                         callbacks: {
+                            title: function(items) {
+                                return items[0].label;
+                            },
                             label: function(context) {
                                 const idx = context.dataIndex;
                                 const data = candleData[idx];
-                                if (context.dataset.label === '涨跌') {
-                                    const change = (data.close - data.open).toFixed(2);
-                                    const percent = ((change / data.open) * 100).toFixed(1);
-                                    return `涨跌: ${change > 0 ? '+' : ''}${change} (${percent}%)`;
-                                } else {
-                                    return `收盘: $${data.close.toFixed(2)} | 最高: $${data.high.toFixed(2)} | 最低: $${data.low.toFixed(2)}`;
-                                }
+                                const change = (data.close - data.open).toFixed(2);
+                                const percent = ((change / data.open) * 100).toFixed(1);
+                                return [
+                                    `开盘: $${data.open.toFixed(2)}`,
+                                    `收盘: $${data.close.toFixed(2)}`,
+                                    `最高: $${data.high.toFixed(2)}`,
+                                    `最低: $${data.low.toFixed(2)}`,
+                                    `涨跌: ${change > 0 ? '+' : ''}${change} (${percent}%)`
+                                ];
                             }
                         }
                     }
@@ -419,23 +412,31 @@ function initEnergyChart() {
                 scales: {
                     x: {
                         grid: { display: false },
-                        ticks: { font: { size: 9 } }
+                        ticks: {
+                            font: { size: 9 },
+                            color: '#64748b',
+                            maxRotation: 0
+                        },
+                        border: { display: false }
                     },
                     y: {
-                        position: 'left',
-                        title: { display: true, text: '涨跌', font: { size: 9 } },
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { font: { size: 9 } }
-                    },
-                    y1: {
                         position: 'right',
-                        title: { display: true, text: '价格($)', font: { size: 9 } },
-                        grid: { display: false },
+                        grid: {
+                            color: 'rgba(255,255,255,0.03)',
+                            drawBorder: false
+                        },
                         ticks: {
-                            callback: function(value) { return '$' + value; },
-                            font: { size: 9 }
-                        }
+                            font: { size: 9 },
+                            color: '#64748b',
+                            callback: function(value) {
+                                return (value > 0 ? '+' : '') + value.toFixed(1);
+                            }
+                        },
+                        border: { display: false }
                     }
+                },
+                layout: {
+                    padding: { top: 5, bottom: 0, left: 0, right: 0 }
                 }
             }
         });

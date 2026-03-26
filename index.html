@@ -85,29 +85,17 @@
                 </div>
 
                 <!-- 能源与原料信号 -->
-                <div class="intel-card energy">
+                <div class="intel-card energy compact">
                     <div class="card-header">
-                        <h3>⛽ 能源与原料信号</h3>
-                        <span class="update-time">更新：5 分钟前</span>
+                        <h3>⛽ 能源与原料</h3>
+                        <span class="badge up">↑ 油价攀升</span>
                     </div>
-                    <div class="card-content">
-                        <div class="metric-row">
-                            <span class="metric-label">布伦特原油</span>
-                            <span class="metric-value up">$82.45 <small>↑2.8%</small></span>
+                    <div class="card-content compact">
+                        <div class="energy-kline-header">
+                            <span class="kline-label">布伦特: <strong>$87.4</strong></span>
+                            <span class="kline-change up">+2.1%</span>
                         </div>
-                        <div class="metric-row">
-                            <span class="metric-label">航油价格</span>
-                            <span class="metric-value up">$2,890/吨 <small>↑1.5%</small></span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">化工原料指数</span>
-                            <span class="metric-value">1,234 <small>持平</small></span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">关键材料 (铜)</span>
-                            <span class="metric-value down">$8,450/吨 <small>↓0.8%</small></span>
-                        </div>
-                        <canvas id="energy-chart" height="120"></canvas>
+                        <canvas id="energy-chart" height="80"></canvas>
                     </div>
                 </div>
 
