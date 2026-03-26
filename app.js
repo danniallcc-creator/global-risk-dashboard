@@ -333,7 +333,9 @@ let policyTrendChart = null;
 function initCharts() {
     // 延迟初始化，确保 DOM 已加载
     setTimeout(() => {
+        initShippingChart();
         initEnergyChart();
+        initPaymentChart();
         initPolicyTrendChart();
     }, 500);
 }
@@ -490,6 +492,117 @@ function initPolicyTrendChart() {
         });
     } catch (error) {
         console.error('政策趋势图表初始化失败:', error);
+    }
+}
+
+// ==================== 航运图表 ====================
+function initShippingChart() {
+    const ctx = document.getElementById('shipping-chart');
+    if (!ctx) return;
+
+    try {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['3/20', '3/21', '3/22', '3/23', '3/24', '3/25'],
+                datasets: [{
+                    label: 'SCFI',
+                    data: [1720, 1750, 1780, 1820, 1800, 1847],
+                    borderColor: '#60a5fa',
+                    backgroundColor: 'rgba(96, 165, 250, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        titleColor: '#e2e8f0',
+                        bodyColor: '#e2e8f0',
+                        borderColor: 'rgba(96, 165, 250, 0.3)',
+                        borderWidth: 1,
+                        padding: 8
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 9 }, color: '#64748b' },
+                        border: { display: false }
+                    },
+                    y: {
+                        position: 'right',
+                        grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
+                        ticks: { font: { size: 9 }, color: '#64748b' },
+                        border: { display: false }
+                    }
+                },
+                layout: { padding: { top: 5, bottom: 0, left: 0, right: 0 } }
+            }
+        });
+    } catch (error) {
+        console.error('航运图表初始化失败:', error);
+    }
+}
+
+// ==================== 支付图表 ====================
+function initPaymentChart() {
+    const ctx = document.getElementById('payment-chart');
+    if (!ctx) return;
+
+    try {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['3/20', '3/21', '3/22', '3/23', '3/24', '3/25'],
+                datasets: [{
+                    label: '逾期率',
+                    data: [12.5, 13.2, 13.8, 14.1, 14.5, 14.2],
+                    backgroundColor: 'rgba(251, 191, 36, 0.7)',
+                    borderColor: 'rgba(251, 191, 36, 1)',
+                    borderWidth: 0,
+                    barPercentage: 0.6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        titleColor: '#e2e8f0',
+                        bodyColor: '#e2e8f0',
+                        borderColor: 'rgba(96, 165, 250, 0.3)',
+                        borderWidth: 1,
+                        padding: 8,
+                        callbacks: { label: (ctx) => `逾期率: ${ctx.raw}%` }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 9 }, color: '#64748b' },
+                        border: { display: false }
+                    },
+                    y: {
+                        position: 'right',
+                        grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
+                        ticks: { font: { size: 9 }, color: '#64748b', callback: (v) => v + '%' },
+                        border: { display: false }
+                    }
+                },
+                layout: { padding: { top: 5, bottom: 0, left: 0, right: 0 } }
+            }
+        });
+    } catch (error) {
+        console.error('支付图表初始化失败:', error);
     }
 }
 

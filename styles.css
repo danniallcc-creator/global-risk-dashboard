@@ -252,28 +252,31 @@ body {
     margin-left: 6px;
 }
 
-/* 紧凑模式 */
-.intel-card.compact {
-    padding: 12px 15px;
-    max-height: 200px;
+/* 固定尺寸模式 500x460 */
+.intel-card.fixed-size {
+    width: 500px;
+    height: 460px;
+    padding: 16px;
+    overflow: hidden;
 }
 
-.intel-card.compact .card-header {
-    margin-bottom: 8px;
-    padding-bottom: 8px;
+.intel-card.fixed-size .card-header {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
 }
 
-.intel-card.compact .card-header h3 {
-    font-size: 1rem;
+.intel-card.fixed-size .card-header h3 {
+    font-size: 1.1rem;
 }
 
-.intel-card.compact .card-content.compact {
-    gap: 6px;
+.intel-card.fixed-size .card-content.mini {
+    gap: 12px;
+    height: calc(100% - 50px);
 }
 
 .intel-card .badge {
-    font-size: 0.75rem;
-    padding: 2px 8px;
+    font-size: 0.7rem;
+    padding: 3px 10px;
     border-radius: 12px;
     font-weight: 500;
 }
@@ -288,39 +291,42 @@ body {
     color: #34d399;
 }
 
-.energy-kline-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px 0;
+.intel-card .badge.warning {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
 }
 
-.energy-kline-header .kline-label {
-    font-size: 0.85rem;
-    color: #94a3b8;
+/* 迷你指标网格 */
+.mini-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
 }
 
-.energy-kline-header .kline-label strong {
-    color: #f1f5f9;
-    font-size: 1rem;
+.mini-metric {
+    text-align: center;
+    padding: 8px 4px;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 8px;
 }
 
-.energy-kline-header .kline-change {
-    font-size: 0.8rem;
+.mini-label {
+    display: block;
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-bottom: 2px;
+}
+
+.mini-value {
+    display: block;
+    font-size: 0.95rem;
     font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 4px;
+    color: #e2e8f0;
 }
 
-.energy-kline-header .kline-change.up {
-    background: rgba(248, 113, 113, 0.2);
-    color: #f87171;
-}
-
-.energy-kline-header .kline-change.down {
-    background: rgba(52, 211, 153, 0.2);
-    color: #34d399;
-}
+.mini-value.up { color: #f87171; }
+.mini-value.down { color: #34d399; }
+.mini-value.warning { color: #fbbf24; }
 
 /* 警报列表 */
 .alert-list {

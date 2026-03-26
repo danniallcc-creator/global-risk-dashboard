@@ -49,91 +49,89 @@
             <!-- 情报分类卡片 -->
             <div class="intelligence-grid">
                 <!-- 航运与通道信号 -->
-                <div class="intel-card shipping">
+                <div class="intel-card shipping fixed-size">
                     <div class="card-header">
-                        <h3>🚢 航运与通道信号</h3>
-                        <span class="update-time">更新：2 分钟前</span>
+                        <h3>🚢 航运与通道</h3>
+                        <span class="badge warning">运价上行</span>
                     </div>
-                    <div class="card-content">
-                        <div class="metric-row">
-                            <span class="metric-label">平均运价指数</span>
-                            <span class="metric-value up">1,847 <small>↑3.2%</small></span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">战争险附加费</span>
-                            <span class="metric-value warning">$450/TEU <small>↑15%</small></span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">港口拥堵率</span>
-                            <span class="metric-value">23.5%</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">准班率</span>
-                            <span class="metric-value down">67.8% <small>↓2.1%</small></span>
-                        </div>
-                        <div class="alert-list">
-                            <div class="alert-item high">
-                                <span class="alert-icon">🔴</span>
-                                <span>红海航线改道，苏伊士运河通行量下降 40%</span>
+                    <div class="card-content mini">
+                        <div class="mini-metrics">
+                            <div class="mini-metric">
+                                <span class="mini-label">SCFI</span>
+                                <span class="mini-value up">1,847</span>
                             </div>
-                            <div class="alert-item medium">
-                                <span class="alert-icon">🟡</span>
-                                <span>洛杉矶港拥堵指数上升至 7.2</span>
+                            <div class="mini-metric">
+                                <span class="mini-label">战争险</span>
+                                <span class="mini-value warning">$285</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">准班率</span>
+                                <span class="mini-value down">67.2%</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">延误</span>
+                                <span class="mini-value">4.7天</span>
                             </div>
                         </div>
+                        <canvas id="shipping-chart" height="60"></canvas>
                     </div>
                 </div>
 
                 <!-- 能源与原料信号 -->
-                <div class="intel-card energy compact">
+                <div class="intel-card energy fixed-size">
                     <div class="card-header">
                         <h3>⛽ 能源与原料</h3>
-                        <span class="badge up">↑ 油价攀升</span>
+                        <span class="badge up">油价攀升</span>
                     </div>
-                    <div class="card-content compact">
-                        <div class="energy-kline-header">
-                            <span class="kline-label">布伦特: <strong>$87.4</strong></span>
-                            <span class="kline-change up">+2.1%</span>
+                    <div class="card-content mini">
+                        <div class="mini-metrics">
+                            <div class="mini-metric">
+                                <span class="mini-label">布伦特</span>
+                                <span class="mini-value up">$87.4</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">航煤</span>
+                                <span class="mini-value up">$96.8</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">TDI</span>
+                                <span class="mini-value up">¥18.4K</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">锂</span>
+                                <span class="mini-value down">¥82K</span>
+                            </div>
                         </div>
-                        <canvas id="energy-chart" height="80"></canvas>
+                        <canvas id="energy-chart" height="60"></canvas>
                     </div>
                 </div>
 
                 <!-- 支付与信用信号 -->
-                <div class="intel-card payment">
+                <div class="intel-card payment fixed-size">
                     <div class="card-header">
-                        <h3>💳 支付与信用信号</h3>
-                        <span class="update-time">更新：10 分钟前</span>
+                        <h3>💳 支付与信用</h3>
+                        <span class="badge warning">关注中</span>
                     </div>
-                    <div class="card-content">
-                        <div class="metric-row">
-                            <span class="metric-label">美元汇率指数</span>
-                            <span class="metric-value up">103.2 <small>↑0.5%</small></span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">新兴市场外汇储备</span>
-                            <span class="metric-value down">-2.3% <small>紧张</small></span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">银行合规收紧度</span>
-                            <span class="metric-value warning">中等偏高</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">客户付款延迟率</span>
-                            <span class="metric-value up">18.7% <small>↑3.2%</small></span>
-                        </div>
-                        <div class="country-list">
-                            <div class="country-item warning">
-                                <span class="country-flag">🇹🇷</span>
-                                <span class="country-name">土耳其</span>
-                                <span class="country-status">外汇紧张</span>
+                    <div class="card-content mini">
+                        <div class="mini-metrics">
+                            <div class="mini-metric">
+                                <span class="mini-label">奈拉</span>
+                                <span class="mini-value up">₦1,580</span>
                             </div>
-                            <div class="country-item warning">
-                                <span class="country-flag">🇦🇷</span>
-                                <span class="country-name">阿根廷</span>
-                                <span class="country-status">汇率波动</span>
+                            <div class="mini-metric">
+                                <span class="mini-label">里拉</span>
+                                <span class="mini-value up">₺38.2</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">逾期率</span>
+                                <span class="mini-value warning">14.2%</span>
+                            </div>
+                            <div class="mini-metric">
+                                <span class="mini-label">拒付</span>
+                                <span class="mini-value">3件</span>
                             </div>
                         </div>
+                        <canvas id="payment-chart" height="60"></canvas>
                     </div>
                 </div>
 
