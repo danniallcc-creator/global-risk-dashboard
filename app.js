@@ -341,20 +341,52 @@ function initCharts() {
 function initEnergyChart() {
     const ctx = document.getElementById('energy-chart');
     if (!ctx) return;
-    
+
     try {
+        // 模拟K线数据: [开盘, 收盘, 最高, 最低] 转换后的柱状图展示
+        const candleData = [
+            { open: 78.5, close: 80.2, high: 81.0, low: 78.2 },
+            { open: 80.2, close: 79.8, high: 80.8, low: 79.5 },
+            { open: 79.8, close: 82.1, high: 82.5, low: 79.5 },
+            { open: 82.1, close: 81.5, high: 82.8, low: 81.2 },
+            { open: 81.5, close: 83.2, high: 83.8, low: 81.3 },
+            { open: 83.2, close: 82.45, high: 83.5, low: 82.0 }
+        ];
+
+        const labels = ['3/20', '3/21', '3/22', '3/23', '3/24', '3/25'];
+
+        // 计算涨跌柱状图数据
+        const priceChanges = candleData.map(d => d.close - d.open);
+        const colors = priceChanges.map(change =>
+            change >= 0 ? 'rgba(255, 170, 0, 0.8)' : 'rgba(0, 214, 143, 0.8)'
+        );
+
         energyChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: ['1 月', '2 月', '3 月', '4 月', '5 月', '6 月'],
-                datasets: [{
-                    label: '原油价格指数',
-                    data: [78.5, 80.2, 79.8, 82.1, 81.5, 82.45],
-                    borderColor: 'rgb(255, 99, 132)',
-                    backgroundColor: 'rgba(255, 99, 132, 0.1)',
-                    tension: 0.4,
-                    fill: true
-                }]
+                labels: labels,
+                datasets: [
+                    {
+                        label: '涨跌',
+                        data: priceChanges,
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c.replace('0.8', '1')),
+                        borderWidth: 1,
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: '收盘价',
+                        data: candleData.map(d => d.close),
+                        type: 'line',
+                        borderColor: 'rgb(255, 99, 132)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgb(255, 99, 132)',
+                        tension: 0.3,
+                        yAxisID: 'y1'
+                    }
+                ]
             },
             options: {
                 responsive: true,
@@ -362,16 +394,46 @@ function initEnergyChart() {
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'top'
+                        position: 'top',
+                        labels: {
+                            boxWidth: 12,
+                            font: { size: 10 }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const idx = context.dataIndex;
+                                const data = candleData[idx];
+                                if (context.dataset.label === '涨跌') {
+                                    const change = (data.close - data.open).toFixed(2);
+                                    const percent = ((change / data.open) * 100).toFixed(1);
+                                    return `涨跌: ${change > 0 ? '+' : ''}${change} (${percent}%)`;
+                                } else {
+                                    return `收盘: $${data.close.toFixed(2)} | 最高: $${data.high.toFixed(2)} | 最低: $${data.low.toFixed(2)}`;
+                                }
+                            }
+                        }
                     }
                 },
                 scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 9 } }
+                    },
                     y: {
-                        beginAtZero: false,
+                        position: 'left',
+                        title: { display: true, text: '涨跌', font: { size: 9 } },
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { font: { size: 9 } }
+                    },
+                    y1: {
+                        position: 'right',
+                        title: { display: true, text: '价格($)', font: { size: 9 } },
+                        grid: { display: false },
                         ticks: {
-                            callback: function(value) {
-                                return '$' + value;
-                            }
+                            callback: function(value) { return '$' + value; },
+                            font: { size: 9 }
                         }
                     }
                 }
